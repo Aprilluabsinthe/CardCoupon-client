@@ -16,7 +16,10 @@ public class Constants {
     public class UserTable{
         /** User Hbase table name */
         public static final String TABLE_NAME = "pb:user";
-        /** basic column family */
+
+        /**
+         * basic column family
+         */
         public static final String FAMILY_B = "b";
         /** user name */
         public static final String NAME = "name";
@@ -24,7 +27,10 @@ public class Constants {
         public static final String AGE = "age";
         /** user sex */
         public static final String SEX = "sex";
-        /** additional column family */
+
+        /**
+         * Optional column family
+         */
         public static final String FAMILY_O = "o";
         /** user phone */
         public static final String PHONE = "phone";
@@ -33,24 +39,31 @@ public class Constants {
     }
 
     /**
-     * Inner class for Pass Template Table
+     * HBase Table for Pass Template
      */
     public class PassTemplateTable{
         /** PassTemplateTable Hbase table name */
         public static final String TABLE_NAME = "pb:passtemplate";
-        /** basic column family */
+        /**
+         * basic column family
+         */
         public static final String FAMILY_B = "b";
         /** merchant's id */
         public static final String ID = "id";
         /** pass template's id */
         public static final String TITLE = "title";
-        /** pass template's description */
+        /** pass template's brief summary */
+        public static final String SUMMARY = "summary";
+        /** pass template's detailed description */
         public static final String DESC = "desc";
         /** pass template's has token or has_token */
         public static final String HAS_TOKEN = "has_token";
         /** pass template's background color */
         public static final String BACKGROUND = "background";
-        /** pass template's color family column */
+
+        /**
+         * pass template's color family column
+         */
         public static final String FAMILY_C = "c";
         /** pass template's limit */
         public static final String LIMIT = "limit";
@@ -61,12 +74,15 @@ public class Constants {
     }
 
     /**
-     * Inner class for Pass Table
+     * HBase Table for Passes
      */
     public class PassTable{
         /** Pass HBase Table name */
         public static final String TABLE_NAME = "pb:pass";
-        /** basic information column family */
+
+        /**
+         * basic information column family
+         */
         public static final String FAMILY_I = "i";
         /** User ID */
         public static final String USER_ID = "user_id";
@@ -81,11 +97,12 @@ public class Constants {
     }
 
     /**
-     * Inner class for FeedBack Object
+     * HBase Table for FeedBack
      */
     public class Feedback{
         /** Feedback HBase Table */
         public static final String TABLE_NAME = "pb:feedback";
+
         /** Feedback HBase information column family */
         public static final String FAMILY_I = "i";
         /** User id */

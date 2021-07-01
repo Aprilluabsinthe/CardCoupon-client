@@ -2,7 +2,7 @@ spring:
   application:
     name: CardCoupon_Client
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/passbook?autoReconnect=true
+    url: jdbc:mysql://127.0.0.1:3306/passbook?serverTimezone=UTC&autoReconnect=true&useSSL=false
     username: root
     password:
   kafka:
