@@ -79,14 +79,44 @@ public class UserPassServiceImpl implements IUserPassService {
         CompareFilter.CompareOp compareOp = (status == PassStatus.UNUSED) ?
                         CompareFilter.CompareOp.EQUAL:CompareFilter.CompareOp.NOT_EQUAL;
 
-        /** find passes of a certain user*/
+        /** ADD FILTERS*/
+        /** Filter 1: if what we are searching ALL
+         * find passes of a certain user, adopting PrefixFilter*/
         filters.add(new PrefixFilter(rowPrefix));
-        /** find all passes that haven't been used */
+
+        /** Filter 2: if what we are searching is not ALL
+         * find all passes that haven't been used
+         * single column filter by CON_DATE
+         * if <code>CON_DATE == "-1"</code>, the pass hasn't been consumed
+         * if <code>CON_DATE != "-1"</code>, the pass has been consumed
+         * if <code>status == PassStatus.UNUSED</code>, unused, <code>CON_DATE == "-1"</code>
+         * if <code>status == PassStatus.USED</code>, used, <code>CON_DATE != "-1"</code>
+         *
+         * <p> see also a simplified logic:
+         *     <code>
+         *         if(status != PassStatus.ALL){
+         *             if(status == PassStatus.UNUSED){
+         *                 filters.add(new SingleColumnValueFilter(
+         *                         FAMILY_I,CON_DATE,CompareFilter.CompareOp.EQUAL,Bytes.toBytes("-1")
+         *                 ));
+         *             }
+         *             else{
+         *                 filters.add(new SingleColumnValueFilter(
+         *                         FAMILY_I,CON_DATE,CompareFilter.CompareOp.NOT_EQUAL,Bytes.toBytes("-1")
+         *                 ));
+         *             }
+         *         }
+         *     </code>
+         * </p>
+         * */
         if(status != PassStatus.ALL){
             filters.add(new SingleColumnValueFilter(
                     FAMILY_I,CON_DATE,compareOp,Bytes.toBytes("-1")
             ));
         }
+
+
+
         /** find in hbase by filter */
         scan.setFilter(new FilterList(filters));
         List<Pass> passes = hbaseTemplate.find(
