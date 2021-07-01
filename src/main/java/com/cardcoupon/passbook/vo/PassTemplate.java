@@ -15,7 +15,7 @@ public class PassTemplate {
     /** title of coupon */
     private String title;
     /** brief summary of coupon */
-    private Integer summary;
+    private String summary;
     /** detailed description of coupon */
     private String desc;
     /** limit counting of coupon */

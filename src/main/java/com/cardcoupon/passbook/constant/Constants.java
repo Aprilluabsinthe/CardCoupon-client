@@ -28,9 +28,7 @@ public class Constants {
         /** user sex */
         public static final String SEX = "sex";
 
-        /**
-         * Optional column family
-         */
+        /** Optional column family */
         public static final String FAMILY_O = "o";
         /** user phone */
         public static final String PHONE = "phone";
