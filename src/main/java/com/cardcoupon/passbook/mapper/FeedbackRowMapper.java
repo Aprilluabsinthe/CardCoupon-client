@@ -17,7 +17,7 @@ public class FeedbackRowMapper implements RowMapper<Feedback> {
     private static byte[] COMMENT = Constants.Feedback.COMMENT.getBytes();
 
     @Override
-    public Feedback mapRow(Result result, int i) throws Exception {
+    public Feedback mapRow(Result result, int rowNum ) throws Exception {
         Feedback feedback = new Feedback();
 
         feedback.setUserId(Bytes.toLong(result.getValue(FAMILY_I,USER_ID)));
