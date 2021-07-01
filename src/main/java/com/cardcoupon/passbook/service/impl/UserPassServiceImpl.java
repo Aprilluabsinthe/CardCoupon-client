@@ -43,17 +43,17 @@ public class UserPassServiceImpl implements IUserPassService {
 
     @Override
     public Response getUserPassInfo(Long userId) throws Exception {
-        return null;
+        return getPassInfoByStatus(userId,PassStatus.UNUSED);
     }
 
     @Override
     public Response getUserUsedPassInfo(Long userId) throws Exception {
-        return null;
+        return getPassInfoByStatus(userId,PassStatus.USED);
     }
 
     @Override
     public Response getUserAllPassInfo(Long userId) throws Exception {
-        return null;
+        return getPassInfoByStatus(userId,PassStatus.ALL);
     }
 
     @Override
@@ -114,8 +114,6 @@ public class UserPassServiceImpl implements IUserPassService {
                     FAMILY_I,CON_DATE,compareOp,Bytes.toBytes("-1")
             ));
         }
-
-
 
         /** find in hbase by filter */
         scan.setFilter(new FilterList(filters));
