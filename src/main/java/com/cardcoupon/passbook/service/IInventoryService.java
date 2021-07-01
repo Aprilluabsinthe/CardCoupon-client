@@ -13,6 +13,6 @@ public interface IInventoryService {
      * @return {@link Response}
      * @throws Exception
      */
-    Response getInventory(Long userId) throws Exception;
+    Response getInventoryInfo(Long userId) throws Exception;
 
 }
