@@ -13,19 +13,15 @@ import com.cardcoupon.passbook.vo.PassTemplate;
 import com.cardcoupon.passbook.vo.Response;
 import com.spring4all.spring.boot.starter.hbase.api.HbaseTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.filter.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -58,7 +54,56 @@ public class UserPassServiceImpl implements IUserPassService {
 
     @Override
     public Response userUsePass(Pass pass) {
-        return null;
+        byte[] FAMILY_I = Constants.PassTable.FAMILY_I.getBytes();
+        byte[] TEMPLATE_ID = Constants.PassTable.TEMPLATE_ID.getBytes();
+        byte[] CON_DATE = Constants.PassTable.CON_DATE.getBytes();
+
+        byte[] rowPrefix = Bytes.toBytes(
+                new StringBuilder(String.valueOf(pass.getUserId()))
+                .reverse().toString()
+        );
+
+        Scan scan = new Scan();
+        List<Filter> filters = new ArrayList<>();
+        // filter 1: Prefix Filter
+        filters.add(new PrefixFilter(rowPrefix));
+        // filter 2: Single Column Value Filter,
+        // the TEMPLATE_ID column should match the pass_template_id of the pass.
+        filters.add(new SingleColumnValueFilter(
+                FAMILY_I,
+                TEMPLATE_ID,
+                CompareFilter.CompareOp.EQUAL,
+                Bytes.toBytes(pass.getTemplateId())
+        ));
+        // filter 3: Single Column Value Filter,
+        // the CON_DATE should be '-1', AKA hasn't been consumed yet.
+        filters.add(new SingleColumnValueFilter(
+                FAMILY_I,
+                CON_DATE,
+                CompareFilter.CompareOp.EQUAL,
+                Bytes.toBytes("-1")
+        ));
+
+        scan.setFilter(new FilterList(filters));
+        List<Pass> passes = hbaseTemplate.find(
+                Constants.PassTable.TABLE_NAME,scan, new PassRowMapper());
+
+        if(passes == null || passes.size() != 1){
+            log.error("User Use Pass Error:{}", JSON.toJSONString(pass));
+            return Response.failure("User Use Pass Error");
+        }
+
+        // find the only pass we are searching for, the List is actually one object
+        List<Mutation> mutations = new ArrayList<>();
+
+        Put put = new Put(Bytes.toBytes(passes.get(0).getRowKey()));
+        String today = DateFormatUtils.ISO_DATE_FORMAT.format(new Date());
+        put.addColumn(FAMILY_I,CON_DATE, Bytes.toBytes(today));
+        mutations.add(put);
+
+        hbaseTemplate.saveOrUpdates(Constants.PassTable.TABLE_NAME,mutations);
+
+        return Response.success();
     }
 
     /**
@@ -115,7 +160,7 @@ public class UserPassServiceImpl implements IUserPassService {
             ));
         }
 
-        /** find in hbase by filter */
+        /** find in hbase by filter, FilterList {@link FilterList} is a subclass of Filter */
         scan.setFilter(new FilterList(filters));
         List<Pass> passes = hbaseTemplate.find(
                 Constants.PassTable.TABLE_NAME,scan, new PassRowMapper());
