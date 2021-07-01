@@ -30,5 +30,5 @@ public interface MerchantsDao extends JpaRepository<Merchants,Integer> {
      * @param ids the ids List to be found
      * @return List of {@link Merchants}
      */
-    List<Optional<Merchants> > findByIdIn(List<Integer> ids);
+    List<Merchants> findByIdIn(List<Integer> ids);
 }
