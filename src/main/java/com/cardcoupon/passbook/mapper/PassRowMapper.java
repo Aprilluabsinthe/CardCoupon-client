@@ -8,7 +8,7 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
- * Mapping for PassRowMapper
+ * PassRowMapper Hbase Row To Object
  */
 public class PassRowMapper implements RowMapper<Pass> {
     private static byte[] FAMILY_I = Constants.PassTable.FAMILY_I.getBytes();
@@ -19,10 +19,10 @@ public class PassRowMapper implements RowMapper<Pass> {
     private static byte[] CON_DATE = Constants.PassTable.CON_DATE.getBytes();
 
     /**
-     * mapRow for PassRowMapper
-     * @param result org.apache.hadoop.hbase.client
-     * @param rowNum int
-     * @return Pass
+     * override Map Row
+     * @param result {@link Result}
+     * @param rowNum Row Number in Hbase
+     * @return Pass object {@link Pass}
      * @throws Exception
      */
     @Override

@@ -24,6 +24,13 @@ public class PassTemplateRowMapper implements RowMapper<PassTemplate> {
     private static byte[] START = Constants.PassTemplateTable.START.getBytes();
     private static byte[] END = Constants.PassTemplateTable.END.getBytes();
 
+    /**
+     * override Map Row
+     * @param result {@link Result}
+     * @param rowNum Row Number in Hbase
+     * @return PassTemplate object {@link PassTemplate}
+     * @throws Exception
+     */
     @Override
     public PassTemplate mapRow(Result result, int rowNum) throws Exception {
         PassTemplate passTemplate = new PassTemplate();

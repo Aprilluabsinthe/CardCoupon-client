@@ -16,6 +16,13 @@ public class FeedbackRowMapper implements RowMapper<Feedback> {
     private static byte[] TEMPLATE_ID = Constants.Feedback.TEMPLATE_ID.getBytes();
     private static byte[] COMMENT = Constants.Feedback.COMMENT.getBytes();
 
+    /**
+     * override Map Row
+     * @param result {@link Result}
+     * @param rowNum Row Number in Hbase
+     * @return Feedback object {@link Feedback}
+     * @throws Exception
+     */
     @Override
     public Feedback mapRow(Result result, int rowNum ) throws Exception {
         Feedback feedback = new Feedback();

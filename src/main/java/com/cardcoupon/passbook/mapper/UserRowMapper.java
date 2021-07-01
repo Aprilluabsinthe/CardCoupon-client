@@ -7,7 +7,7 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 
 /**
- * HBase User Row -> User Object mapping
+ * User Hbase Row To Object
  */
 public class UserRowMapper implements RowMapper<User> {
     private static byte[] FAMILY_B = Constants.UserTable.FAMILY_B.getBytes();
@@ -19,6 +19,13 @@ public class UserRowMapper implements RowMapper<User> {
     private static byte[] ADDRESS = Constants.UserTable.ADDRESS.getBytes();
     private static byte[] PHONE = Constants.UserTable.PHONE.getBytes();
 
+    /**
+     * override Map Row
+     * @param result {@link Result}
+     * @param rowNum Row Number in Hbase
+     * @return User object {@link User}
+     * @throws Exception
+     */
     @Override
     public User mapRow(Result result, int rowNum) throws Exception {
         User.BaseInfo baseInfo = new User.BaseInfo(
