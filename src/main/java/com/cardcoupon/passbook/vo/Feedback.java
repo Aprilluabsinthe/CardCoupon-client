@@ -22,10 +22,12 @@ public class Feedback {
     /** Comment's content */
     public boolean validate(){
 
+        /** Feedback can only be FeedbackType(APP or PASS) */
         FeedbackType feedbackType = Enums.getIfPresent(
                 FeedbackType.class, this.type.toUpperCase()
         ).orNull();
 
+        /** Feedback can not be null */
         return !(null == feedbackType || null == comment);
     }
 }
