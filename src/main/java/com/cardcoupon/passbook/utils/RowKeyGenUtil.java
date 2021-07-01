@@ -11,7 +11,7 @@ public class RowKeyGenUtil {
     /**
      * Generate RowKey according to PassTemplate
      * @param passTemplate {@link PassTemplate} the passTemplate to generate rowkey
-     * @return encoded md5Hex String carrying passTemplate information
+     * @return encoded md5Hex String carrying passTemplate information that can be used as RowKey in HBase
      */
     public static String genPassTemplateRowKey(PassTemplate passTemplate){
         String passInfo = String.valueOf(passTemplate.getId()) + '_' + passTemplate.getTitle();
@@ -32,7 +32,7 @@ public class RowKeyGenUtil {
      *      B's number suffix will become smaller than A.
      *      thus, The last Feedback will be shown at the top</p>
      * @param feedback {@link Feedback} the Feedback to generate rowkey
-     * @return String Key containing UserID and timestamp
+     * @return String Key containing UserID and timestamp that can be used as RowKey in HBase
      */
     public static String genFeedbackRowKey(Feedback feedback){
         return new StringBuilder(String.valueOf(feedback.getUserId())).reverse().toString()
@@ -52,8 +52,19 @@ public class RowKeyGenUtil {
      *      thus, The last Feedback will be shown at the top</p>
      *
      *      <p>The PassTemplate gained at this time should also be stored</p>
+     *
+     *      <p> Pass RowKey can be calculated by
+     *          <code>
+     *              Pass RowKey = reversed(userId) + inverse(timestamp) + PassTemplate RowKey
+     *          </code>
+     *          then we can
+     *          1. balance HBase overload
+     *          2. store in reverse chronological order
+     *          3. Filter by passTemplate
+     *      </p>
+     *
      * @param request {@link GainPassTemplateRequest}
-     * @return
+     * @return String RowKey that can be used in HBase
      */
     public static String genPassRowKey(GainPassTemplateRequest request){
         return new StringBuilder(String.valueOf(request.getUserId())).reverse().toString()
