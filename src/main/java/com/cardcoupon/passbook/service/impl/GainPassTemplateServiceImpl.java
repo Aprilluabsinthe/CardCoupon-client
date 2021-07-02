@@ -1,9 +1,12 @@
 package com.cardcoupon.passbook.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.cardcoupon.passbook.constant.Constants;
+import com.cardcoupon.passbook.mapper.PassTemplateRowMapper;
 import com.cardcoupon.passbook.service.IGainPassTemplateService;
 import com.cardcoupon.passbook.utils.RowKeyGenUtil;
 import com.cardcoupon.passbook.vo.GainPassTemplateRequest;
+import com.cardcoupon.passbook.vo.PassTemplate;
 import com.cardcoupon.passbook.vo.Response;
 import com.spring4all.spring.boot.starter.hbase.api.HbaseTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +43,56 @@ public class GainPassTemplateServiceImpl implements IGainPassTemplateService {
     }
 
     @Override
-    public Response gainPassTemplate(GainPassTemplateRequest request) {
-        return null;
+    public Response gainPassTemplate(GainPassTemplateRequest request) throws Exception {
+        PassTemplate passTemplate;
+        String passTemplateId = RowKeyGenUtil.genPassTemplateRowKey(
+                request.getPassTemplate()
+        );
+
+        try{
+            passTemplate = hbaseTemplate.get(
+                    Constants.PassTemplateTable.TABLE_NAME,
+                    passTemplateId,
+                    new PassTemplateRowMapper()
+            );
+        }catch(Exception e){
+            log.error("Gain PassTemplate Error:[}", JSON.toJSONString(request.getPassTemplate()));
+            return Response.failure("Gain PassTemplate Error");
+        }
+
+        // error 1: limit exceeds
+        if(passTemplate.getLimit() <= 1 && passTemplate.getLimit()!=-1){
+            log.error("PassTemplate LIMIT reaching Max :[}",
+                    JSON.toJSONString(request.getPassTemplate()));
+            return Response.failure("PassTemplate LIMIT reaching Max.");
+        }
+
+        // error 2: time expires
+        Date cur = new Date();
+        if(cur.getTime() < passTemplate.getStart().getTime()
+                && cur.getTime() >= passTemplate.getEnd().getTime()){
+            log.error("PassTemplate Valid Time Error or has expired :[}",
+                    JSON.toJSONString(request.getPassTemplate()));
+            return Response.failure("assTemplate Valid Time Error or has expired.");
+        }
+
+        if(passTemplate.getLimit() != -1){
+            List<Mutation> mutations = new ArrayList<>();
+            byte[] FAMILY_C = Constants.PassTemplateTable.FAMILY_C.getBytes();
+            byte[] LIMIT = Constants.PassTemplateTable.LIMIT.getBytes();
+            byte[] newLimit = Bytes.toBytes(passTemplate.getLimit()-1);
+            Put put = new Put(Bytes.toBytes(passTemplateId));
+            put.addColumn(FAMILY_C,LIMIT,newLimit);
+            mutations.add(put);
+            hbaseTemplate.saveOrUpdates(Constants.PassTemplateTable.TABLE_NAME,mutations);
+        }
+
+        // error 3: add pass to user failure
+        if(!addPassForUser(request,passTemplate.getId(),passTemplateId)){
+            return Response.failure("Add Pass For User Error");
+        }
+
+        return Response.success();
     }
 
     /**

@@ -12,5 +12,5 @@ public interface IGainPassTemplateService {
      * @param request {@link GainPassTemplateRequest}
      * @return Response {@link Response}
      */
-    Response gainPassTemplate(GainPassTemplateRequest request);
+    Response gainPassTemplate(GainPassTemplateRequest request) throws Exception;
 }
