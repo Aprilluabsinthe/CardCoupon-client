@@ -1,6 +1,5 @@
 package com.cardcoupon.passbook.controller;
 
-import com.cardcoupon.passbook.constant.Constants;
 import com.cardcoupon.passbook.log.LogConstants;
 import com.cardcoupon.passbook.log.LogGenerator;
 import com.cardcoupon.passbook.service.IFeedbackService;
@@ -36,7 +35,11 @@ public class PassbookController {
     private final HttpServletRequest httpServletRequest;
 
     @Autowired
-    public PassbookController(IUserPassService userPassService, IInventoryService inventoryService, IGainPassTemplateService gainPassTemplateService, IFeedbackService feedbackService, HttpServletRequest httpServletRequest) {
+    public PassbookController(IUserPassService userPassService,
+                              IInventoryService inventoryService,
+                              IGainPassTemplateService gainPassTemplateService,
+                              IFeedbackService feedbackService,
+                              HttpServletRequest httpServletRequest) {
         this.userPassService = userPassService;
         this.inventoryService = inventoryService;
         this.gainPassTemplateService = gainPassTemplateService;
@@ -48,7 +51,7 @@ public class PassbookController {
      * Gain pass information of a certain user
      * @param userId the ID of the user
      * @return {@link Response}
-     * @throws Exception
+     * @throws Exception Exception
      */
     @ResponseBody
     @GetMapping("/userpassinfo")
@@ -65,7 +68,7 @@ public class PassbookController {
      * Gain used pass information of a certain user
      * @param userId the ID of the user
      * @return {@link Response}
-     * @throws Exception
+     * @throws Exception Exception
      */
     @ResponseBody
     @GetMapping("/userusedpassinfo")
@@ -82,11 +85,10 @@ public class PassbookController {
      * Gain used pass information of a certain user
      * @param pass {@link Pass}
      * @return {@link Response}
-     * @throws Exception
      */
     @ResponseBody
     @GetMapping("/userusepass")
-    Response userUsePass(@RequestBody Pass pass) throws Exception {
+    Response userUsePass(@RequestBody Pass pass) {
         LogGenerator.genLog(
                 httpServletRequest,
                 pass.getUserId(),
@@ -99,7 +101,7 @@ public class PassbookController {
      * Gain inventory information of a certain user
      * @param userId the ID of the user
      * @return {@link Response}
-     * @throws Exception
+     * @throws Exception Exception
      */
     @ResponseBody
     @GetMapping("/inventoryinfo")
@@ -114,9 +116,9 @@ public class PassbookController {
 
     /**
      * Endpoint for gainning a pass template
-     * @param request
-     * @return
-     * @throws Exception
+     * @param request {@link GainPassTemplateRequest}
+     * @return {@link Response}
+     * @throws Exception Exception
      */
     @ResponseBody
     @GetMapping("/gainpasstemplate")
@@ -164,7 +166,7 @@ public class PassbookController {
     /**
      * ENdpoint for exception
      * @return {@link Response}
-     * @throws Exception
+     * @throws Exception Exception
      */
     @ResponseBody
     @GetMapping("/exception")
