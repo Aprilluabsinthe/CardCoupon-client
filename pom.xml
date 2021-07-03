@@ -110,6 +110,10 @@
             <artifactId>lombok</artifactId>
             <version>1.18.2</version>
         </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy-agent</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
