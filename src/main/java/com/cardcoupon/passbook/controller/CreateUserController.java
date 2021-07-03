@@ -37,7 +37,7 @@ public class CreateUserController {
      * @throws Exception
      */
     @ResponseBody
-    @GetMapping("/createuser")
+    @PostMapping("/createuser")
     Response createUser(@RequestBody User user) throws Exception {
         LogGenerator.genLog(
                 httpServletRequest,

@@ -87,7 +87,7 @@ public class PassbookController {
      * @return {@link Response}
      */
     @ResponseBody
-    @GetMapping("/userusepass")
+    @PostMapping("/userusepass")
     Response userUsePass(@RequestBody Pass pass) {
         LogGenerator.genLog(
                 httpServletRequest,
@@ -121,7 +121,7 @@ public class PassbookController {
      * @throws Exception Exception
      */
     @ResponseBody
-    @GetMapping("/gainpasstemplate")
+    @PostMapping("/gainpasstemplate")
     Response gainPassTemplate(@RequestBody GainPassTemplateRequest request) throws Exception {
         LogGenerator.genLog(
                 httpServletRequest,
@@ -137,7 +137,7 @@ public class PassbookController {
      * @return {@link Response}
      */
     @ResponseBody
-    @GetMapping("/createfeedback")
+    @PostMapping("/createfeedback")
     Response createFeedback(@RequestBody Feedback feedback){
         LogGenerator.genLog(
                 httpServletRequest,
