@@ -11,14 +11,16 @@ spring:
       group-id: passbook
     listener:
       concurrency: 4
-    data:
-      hbase:
-        quorum: 127.0.0.1:2181
-        rootDir: file:///Users/ludi/githublearn/passbook/hbase_data/root_dir
-        nodeParent: /hbase
-    redis:
-      host: 127.0.0.1
-      port: 6379
+  jpa:
+    open-in-view: false
+  data:
+    hbase:
+      quorum: 127.0.0.1:2181
+      rootDir: file:///Users/ludi/githublearn/passbook/hbase_data/root_dir
+      nodeParent: /hbase
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 server:
   port: 9528
